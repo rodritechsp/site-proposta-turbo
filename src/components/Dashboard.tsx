@@ -1,16 +1,52 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useProposals } from '@/hooks/useProposals';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePDFExport } from '@/hooks/usePDFExport';
 import { FileText, Plus, Eye, Share2, Download, Calendar, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { toast } from '@/hooks/use-toast';
+import { ProposalData } from '@/types';
 
 const Dashboard = () => {
   const { proposals, loading } = useProposals();
   const { signOut, userProfile } = useAuth();
+  const { generatePDF } = usePDFExport();
+
+  const handleExportPDF = (proposta: any) => {
+    try {
+      // Converter dados do Supabase para o formato ProposalData
+      const proposalData: ProposalData = {
+        id: proposta.id,
+        clientName: proposta.titulo.replace('Proposta para ', ''),
+        clientEmail: 'cliente@exemplo.com', // Placeholder
+        projectType: proposta.tipo_site,
+        pages: 5, // Placeholder
+        features: proposta.funcionalidades || [],
+        budget: 'R$ 5.000 - R$ 10.000', // Placeholder baseado no valor
+        timeline: '30 dias', // Placeholder
+        description: `Desenvolvimento de ${getProjectTypeLabel(proposta.tipo_site)} com as funcionalidades solicitadas.`,
+        status: proposta.status,
+        createdAt: new Date(proposta.criado_em),
+      };
+
+      generatePDF(proposalData, 'modern');
+      
+      toast({
+        title: "PDF exportado com sucesso!",
+        description: "O arquivo PDF foi baixado para seu dispositivo.",
+      });
+    } catch (error) {
+      console.error('Erro ao exportar PDF:', error);
+      toast({
+        title: "Erro ao exportar PDF",
+        description: "Não foi possível gerar o arquivo PDF. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
@@ -181,14 +217,14 @@ const Dashboard = () => {
                       <span>R$ {proposta.valor_total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                     </div>
                     <div className="flex items-center space-x-2 mt-2">
-                      {proposta.funcionalidades.slice(0, 3).map((func, index) => (
+                      {(proposta.funcionalidades || []).slice(0, 3).map((func: string, index: number) => (
                         <Badge key={index} variant="outline" className="text-xs">
                           {func}
                         </Badge>
                       ))}
-                      {proposta.funcionalidades.length > 3 && (
+                      {(proposta.funcionalidades || []).length > 3 && (
                         <Badge variant="outline" className="text-xs">
-                          +{proposta.funcionalidades.length - 3} mais
+                          +{(proposta.funcionalidades || []).length - 3} mais
                         </Badge>
                       )}
                     </div>
@@ -203,7 +239,12 @@ const Dashboard = () => {
                       <Share2 size={14} />
                       <span>Compartilhar</span>
                     </Button>
-                    <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center space-x-1"
+                      onClick={() => handleExportPDF(proposta)}
+                    >
                       <Download size={14} />
                       <span>PDF</span>
                     </Button>

@@ -1,9 +1,10 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ProposalData } from '@/types';
 import { Download, Share2, Check, Calendar, DollarSign, Clock } from 'lucide-react';
+import { usePDFExport } from '@/hooks/usePDFExport';
+import { toast } from '@/hooks/use-toast';
 
 interface ProposalPreviewProps {
   proposal: ProposalData;
@@ -14,6 +15,26 @@ interface ProposalPreviewProps {
 }
 
 const ProposalPreview = ({ proposal, template, onSave, onExport, onShare }: ProposalPreviewProps) => {
+  const { generatePDF } = usePDFExport();
+
+  const handleExportPDF = () => {
+    try {
+      generatePDF(proposal, template);
+      toast({
+        title: "PDF exportado com sucesso!",
+        description: "O arquivo PDF foi baixado para seu dispositivo.",
+      });
+      onExport(); // Chama a função original se houver lógica adicional
+    } catch (error) {
+      console.error('Erro ao exportar PDF:', error);
+      toast({
+        title: "Erro ao exportar PDF",
+        description: "Não foi possível gerar o arquivo PDF. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getProjectTypeLabel = (type: string) => {
     const types = {
       'landing': 'Landing Page',
@@ -229,7 +250,7 @@ const ProposalPreview = ({ proposal, template, onSave, onExport, onShare }: Prop
               <Share2 size={16} />
               <span>Compartilhar</span>
             </Button>
-            <Button onClick={onExport} className="bg-blue-600 hover:bg-blue-700 flex items-center space-x-2">
+            <Button onClick={handleExportPDF} className="bg-blue-600 hover:bg-blue-700 flex items-center space-x-2">
               <Download size={16} />
               <span>Exportar PDF</span>
             </Button>
