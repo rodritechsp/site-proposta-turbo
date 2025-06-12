@@ -1,5 +1,5 @@
 
-import { jsPDF } from 'jspdf';
+import jsPDF from 'jspdf';
 import { ProposalData } from '@/types';
 
 export const usePDFExport = () => {
