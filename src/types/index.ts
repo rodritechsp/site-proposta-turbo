@@ -18,7 +18,7 @@ export interface ProposalData {
 export interface BriefingFormData {
   clientName: string;
   clientEmail: string;
-  projectType: string;
+  projectType: 'landing' | 'institutional' | 'ecommerce' | 'blog' | 'custom';
   pages: number;
   features: string[];
   budget: string;
@@ -31,4 +31,26 @@ export interface ProposalTemplate {
   name: string;
   description: string;
   preview: string;
+}
+
+export interface User {
+  id: string;
+  nome: string;
+  email?: string;
+  logo_url?: string;
+  plano: 'free' | 'premium';
+  criado_em: string;
+}
+
+export interface Proposta {
+  id: string;
+  user_id: string;
+  titulo: string;
+  tipo_site: 'landing' | 'institutional' | 'ecommerce' | 'blog' | 'custom';
+  funcionalidades: string[];
+  valor_total: number;
+  status: 'rascunho' | 'enviado' | 'aceito' | 'rejeitado';
+  pdf_url?: string;
+  criado_em: string;
+  atualizado_em: string;
 }

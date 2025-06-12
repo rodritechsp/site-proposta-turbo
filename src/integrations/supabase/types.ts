@@ -9,7 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      propostas: {
+        Row: {
+          atualizado_em: string | null
+          criado_em: string | null
+          funcionalidades: Json | null
+          id: string
+          pdf_url: string | null
+          status: string | null
+          tipo_site: string
+          titulo: string
+          user_id: string
+          valor_total: number | null
+        }
+        Insert: {
+          atualizado_em?: string | null
+          criado_em?: string | null
+          funcionalidades?: Json | null
+          id?: string
+          pdf_url?: string | null
+          status?: string | null
+          tipo_site: string
+          titulo: string
+          user_id: string
+          valor_total?: number | null
+        }
+        Update: {
+          atualizado_em?: string | null
+          criado_em?: string | null
+          funcionalidades?: Json | null
+          id?: string
+          pdf_url?: string | null
+          status?: string | null
+          tipo_site?: string
+          titulo?: string
+          user_id?: string
+          valor_total?: number | null
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          criado_em: string | null
+          email: string | null
+          id: string
+          logo_url: string | null
+          nome: string
+          plano: string | null
+        }
+        Insert: {
+          criado_em?: string | null
+          email?: string | null
+          id: string
+          logo_url?: string | null
+          nome: string
+          plano?: string | null
+        }
+        Update: {
+          criado_em?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          nome?: string
+          plano?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

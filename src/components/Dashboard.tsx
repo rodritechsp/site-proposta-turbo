@@ -1,32 +1,26 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ProposalData } from '@/types';
-import { FileText, Plus, Eye, Share2, Download, Calendar } from 'lucide-react';
+import { useProposals } from '@/hooks/useProposals';
+import { useAuth } from '@/contexts/AuthContext';
+import { FileText, Plus, Eye, Share2, Download, Calendar, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-  const [proposals, setProposals] = useState<ProposalData[]>([]);
+  const { proposals, loading } = useProposals();
+  const { signOut, userProfile } = useAuth();
 
-  useEffect(() => {
-    // Load proposals from localStorage
-    const savedProposals = localStorage.getItem('proposals');
-    if (savedProposals) {
-      setProposals(JSON.parse(savedProposals));
-    }
-  }, []);
-
-  const getStatusBadge = (status: ProposalData['status']) => {
+  const getStatusBadge = (status: string) => {
     const statusConfig = {
-      draft: { label: 'Rascunho', variant: 'secondary' as const, color: 'bg-gray-100 text-gray-800' },
-      sent: { label: 'Enviado', variant: 'default' as const, color: 'bg-blue-100 text-blue-800' },
-      accepted: { label: 'Aceito', variant: 'default' as const, color: 'bg-green-100 text-green-800' },
-      rejected: { label: 'Rejeitado', variant: 'destructive' as const, color: 'bg-red-100 text-red-800' }
+      rascunho: { label: 'Rascunho', color: 'bg-gray-100 text-gray-800' },
+      enviado: { label: 'Enviado', color: 'bg-blue-100 text-blue-800' },
+      aceito: { label: 'Aceito', color: 'bg-green-100 text-green-800' },
+      rejeitado: { label: 'Rejeitado', color: 'bg-red-100 text-red-800' }
     };
     
-    const config = statusConfig[status];
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.rascunho;
     return (
       <Badge className={config.color}>
         {config.label}
@@ -45,21 +39,32 @@ const Dashboard = () => {
     return types[type as keyof typeof types] || type;
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
-    }).format(new Date(date));
+    }).format(new Date(dateString));
   };
 
   const stats = {
     total: proposals.length,
-    draft: proposals.filter(p => p.status === 'draft').length,
-    sent: proposals.filter(p => p.status === 'sent').length,
-    accepted: proposals.filter(p => p.status === 'accepted').length,
-    rejected: proposals.filter(p => p.status === 'rejected').length
+    rascunho: proposals.filter(p => p.status === 'rascunho').length,
+    enviado: proposals.filter(p => p.status === 'enviado').length,
+    aceito: proposals.filter(p => p.status === 'aceito').length,
+    rejeitado: proposals.filter(p => p.status === 'rejeitado').length
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando suas propostas...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-6">
@@ -67,14 +72,26 @@ const Dashboard = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Gerencie suas propostas comerciais</p>
+          <p className="text-gray-600 mt-2">
+            Olá, {userProfile?.nome || 'Usuário'}! Gerencie suas propostas comerciais
+          </p>
         </div>
-        <Link to="/create">
-          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 hover:shadow-lg flex items-center space-x-2">
-            <Plus size={20} />
-            <span>Nova Proposta</span>
+        <div className="flex items-center space-x-4">
+          <Link to="/create">
+            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 hover:shadow-lg flex items-center space-x-2">
+              <Plus size={20} />
+              <span>Nova Proposta</span>
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={signOut}
+            className="flex items-center space-x-2"
+          >
+            <LogOut size={16} />
+            <span>Sair</span>
           </Button>
-        </Link>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -93,7 +110,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm font-medium">Rascunhos</p>
-              <p className="text-3xl font-bold text-gray-800">{stats.draft}</p>
+              <p className="text-3xl font-bold text-gray-800">{stats.rascunho}</p>
             </div>
           </div>
         </Card>
@@ -102,7 +119,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-600 text-sm font-medium">Enviados</p>
-              <p className="text-3xl font-bold text-blue-800">{stats.sent}</p>
+              <p className="text-3xl font-bold text-blue-800">{stats.enviado}</p>
             </div>
           </div>
         </Card>
@@ -111,7 +128,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-600 text-sm font-medium">Aceitos</p>
-              <p className="text-3xl font-bold text-green-800">{stats.accepted}</p>
+              <p className="text-3xl font-bold text-green-800">{stats.aceito}</p>
             </div>
           </div>
         </Card>
@@ -120,7 +137,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-red-600 text-sm font-medium">Rejeitados</p>
-              <p className="text-3xl font-bold text-red-800">{stats.rejected}</p>
+              <p className="text-3xl font-bold text-red-800">{stats.rejeitado}</p>
             </div>
           </div>
         </Card>
@@ -145,28 +162,36 @@ const Dashboard = () => {
           </div>
         ) : (
           <div className="divide-y divide-gray-200">
-            {proposals.map((proposal) => (
-              <div key={proposal.id} className="p-6 hover:bg-gray-50 transition-colors">
+            {proposals.map((proposta) => (
+              <div key={proposta.id} className="p-6 hover:bg-gray-50 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-4 mb-2">
                       <h3 className="text-lg font-semibold text-gray-800">
-                        {proposal.clientName}
+                        {proposta.titulo}
                       </h3>
-                      {getStatusBadge(proposal.status)}
+                      {getStatusBadge(proposta.status)}
                     </div>
                     <div className="flex items-center space-x-6 text-sm text-gray-600">
-                      <span>{getProjectTypeLabel(proposal.projectType)}</span>
+                      <span>{getProjectTypeLabel(proposta.tipo_site)}</span>
                       <span className="flex items-center space-x-1">
                         <Calendar size={14} />
-                        <span>{formatDate(proposal.createdAt)}</span>
+                        <span>{formatDate(proposta.criado_em)}</span>
                       </span>
-                      <span>{proposal.pages} página(s)</span>
-                      <span>{proposal.budget}</span>
+                      <span>R$ {proposta.valor_total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                     </div>
-                    <p className="text-gray-500 text-sm mt-1 line-clamp-2">
-                      {proposal.description}
-                    </p>
+                    <div className="flex items-center space-x-2 mt-2">
+                      {proposta.funcionalidades.slice(0, 3).map((func, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {func}
+                        </Badge>
+                      ))}
+                      {proposta.funcionalidades.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{proposta.funcionalidades.length - 3} mais
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="flex items-center space-x-2 ml-6">

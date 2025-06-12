@@ -3,168 +3,183 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import Layout from '@/components/Layout';
-import { 
-  Sparkles, 
-  FileText, 
-  Download, 
-  Share2, 
-  Clock, 
-  CheckCircle, 
-  ArrowRight,
-  Zap,
-  Users,
-  TrendingUp
-} from 'lucide-react';
+import { FileText, Zap, Share2, Download, CheckCircle, Users } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
-  const features = [
-    {
-      icon: <Sparkles className="h-8 w-8 text-blue-600" />,
-      title: "Briefing Inteligente",
-      description: "Formulário adaptável que coleta todas as informações necessárias para gerar propostas precisas e personalizadas."
-    },
-    {
-      icon: <FileText className="h-8 w-8 text-purple-600" />,
-      title: "Geração Automática",
-      description: "Crie propostas profissionais automaticamente com base nas respostas do briefing, incluindo valores e prazos."
-    },
-    {
-      icon: <Download className="h-8 w-8 text-green-600" />,
-      title: "Export em PDF",
-      description: "Exporte suas propostas em PDF com design profissional para envio por email ou impressão."
-    },
-    {
-      icon: <Share2 className="h-8 w-8 text-blue-600" />,
-      title: "Compartilhamento",
-      description: "Gere links únicos para compartilhar propostas online com assinatura digital integrada."
-    },
-    {
-      icon: <Clock className="h-8 w-8 text-orange-600" />,
-      title: "Histórico Completo",
-      description: "Acompanhe todas as suas propostas com status detalhado: rascunho, enviado, aceito ou rejeitado."
-    },
-    {
-      icon: <CheckCircle className="h-8 w-8 text-green-600" />,
-      title: "Assinatura Digital",
-      description: "Sistema simples de aceite com nome, data e hora registrados automaticamente."
-    }
-  ];
-
-  const stats = [
-    { icon: <Zap className="h-6 w-6" />, value: "90%", label: "Menos tempo criando propostas" },
-    { icon: <Users className="h-6 w-6" />, value: "500+", label: "Freelancers usando" },
-    { icon: <TrendingUp className="h-6 w-6" />, value: "2x", label: "Mais conversões" }
-  ];
+  const { user } = useAuth();
 
   return (
-    <Layout>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <FileText className="h-8 w-8 text-blue-600" />
+            <span className="text-2xl font-bold text-gray-800">ProposalGen</span>
+          </div>
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <Link to="/dashboard">
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/auth">
+                  <Button variant="outline">
+                    Entrar
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button className="bg-blue-600 hover:bg-blue-700">
+                    Começar Grátis
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative py-20 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"></div>
-        <div className="relative max-w-6xl mx-auto text-center">
-          <div className="mb-8">
-            <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <Sparkles size={16} />
-              <span>Geração automática de propostas</span>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <h1 className="text-5xl font-bold text-gray-800 mb-6 leading-tight">
+          Gere propostas profissionais em{' '}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            segundos
+          </span>
+        </h1>
+        <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          Crie propostas comerciais impressionantes para criação de sites com templates personalizáveis, 
+          assinatura digital e compartilhamento instantâneo.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          {user ? (
+            <Link to="/create">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg">
+                <Zap className="mr-2 h-5 w-5" />
+                Criar Nova Proposta
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/auth">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg">
+                <Zap className="mr-2 h-5 w-5" />
+                Começar Agora - Grátis
+              </Button>
+            </Link>
+          )}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+          Tudo que você precisa para impressionar seus clientes
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <Card className="p-6 hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mb-4">
+              <Zap className="h-6 w-6 text-blue-600" />
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">
-              Crie propostas{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                incríveis
-              </span>{' '}
-              em minutos
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Automatize a criação de propostas comerciais para sites com templates profissionais, 
-              briefing inteligente e assinatura digital. Perfeito para freelancers e agências.
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Geração Automática</h3>
+            <p className="text-gray-600">
+              Preencha um briefing simples e gere propostas profissionais automaticamente com preços e cronogramas.
             </p>
-          </div>
+          </Card>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link to="/create">
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2">
-                <span>Criar Primeira Proposta</span>
-                <ArrowRight size={20} />
-              </Button>
-            </Link>
-            <Link to="/dashboard">
-              <Button variant="outline" className="border-2 border-gray-300 hover:border-blue-600 hover:text-blue-600 font-medium py-4 px-8 rounded-lg text-lg transition-all duration-200">
-                Ver Dashboard
-              </Button>
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-            {stats.map((stat, index) => (
-              <div key={index} className="flex items-center justify-center space-x-3 text-gray-700">
-                <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-                  {stat.icon}
-                </div>
-                <div className="text-left">
-                  <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              Tudo que você precisa para{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                impressionar clientes
-              </span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Funcionalidades pensadas para economizar seu tempo e aumentar sua taxa de conversão
+          <Card className="p-6 hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg mb-4">
+              <FileText className="h-6 w-6 text-purple-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Templates Elegantes</h3>
+            <p className="text-gray-600">
+              2 modelos visuais profissionais que você pode personalizar com sua marca e cores.
             </p>
-          </div>
+          </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 bg-white/80 backdrop-blur-sm">
-                <div className="mb-6">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {feature.description}
-                </p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <Card className="p-12 bg-gradient-to-br from-blue-600 to-purple-600 text-white border-0 shadow-2xl">
-            <h2 className="text-4xl font-bold mb-6">
-              Pronto para criar propostas que convertem?
-            </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Junte-se a centenas de freelancers e agências que já usam o ProposalCraft 
-              para criar propostas profissionais e fechar mais negócios.
+          <Card className="p-6 hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mb-4">
+              <Share2 className="h-6 w-6 text-green-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Compartilhamento Fácil</h3>
+            <p className="text-gray-600">
+              Envie por link ou baixe em PDF. Seus clientes podem assinar digitalmente com um clique.
             </p>
-            <Link to="/create">
-              <Button className="bg-white text-blue-600 hover:bg-gray-100 font-medium py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 hover:shadow-lg">
-                Começar Agora - É Grátis
-              </Button>
-            </Link>
+          </Card>
+
+          <Card className="p-6 hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-lg mb-4">
+              <CheckCircle className="h-6 w-6 text-orange-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Assinatura Digital</h3>
+            <p className="text-gray-600">
+              Sistema simples de aceite com nome, data e confirmação para validação das propostas.
+            </p>
+          </Card>
+
+          <Card className="p-6 hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-lg mb-4">
+              <Download className="h-6 w-6 text-red-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Dashboard Completo</h3>
+            <p className="text-gray-600">
+              Gerencie todas suas propostas em um só lugar com status de acompanhamento em tempo real.
+            </p>
+          </Card>
+
+          <Card className="p-6 hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <div className="flex items-center justify-center w-12 h-12 bg-cyan-100 rounded-lg mb-4">
+              <Users className="h-6 w-6 text-cyan-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Ideal para Freelancers</h3>
+            <p className="text-gray-600">
+              Perfeito para freelancers e agências que querem economizar tempo e aumentar conversões.
+            </p>
           </Card>
         </div>
       </section>
-    </Layout>
+
+      {/* CTA */}
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-20">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Pronto para impressionar seus clientes?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8">
+            Comece a criar propostas profissionais hoje mesmo. É grátis para começar!
+          </p>
+          {user ? (
+            <Link to="/create">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+                Criar Primeira Proposta
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/auth">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+                Começar Agora - É Grátis
+              </Button>
+            </Link>
+          )}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <FileText className="h-6 w-6" />
+            <span className="text-xl font-bold">ProposalGen</span>
+          </div>
+          <p className="text-gray-400">
+            © 2024 ProposalGen. Feito para freelancers e agências que valorizam seu tempo.
+          </p>
+        </div>
+      </footer>
+    </div>
   );
 };
 

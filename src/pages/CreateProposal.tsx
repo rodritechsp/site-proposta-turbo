@@ -6,10 +6,12 @@ import TemplateSelector from '@/components/TemplateSelector';
 import ProposalPreview from '@/components/ProposalPreview';
 import Layout from '@/components/Layout';
 import { BriefingFormData, ProposalData } from '@/types';
+import { useProposals } from '@/hooks/useProposals';
 import { toast } from '@/hooks/use-toast';
 
 const CreateProposal = () => {
   const navigate = useNavigate();
+  const { createProposal } = useProposals();
   const [step, setStep] = useState<'briefing' | 'template' | 'preview'>('briefing');
   const [briefingData, setBriefingData] = useState<BriefingFormData | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<'modern' | 'elegant'>('modern');
@@ -28,7 +30,14 @@ const CreateProposal = () => {
     if (briefingData) {
       const newProposal: ProposalData = {
         id: Date.now().toString(),
-        ...briefingData,
+        clientName: briefingData.clientName,
+        clientEmail: briefingData.clientEmail,
+        projectType: briefingData.projectType,
+        pages: briefingData.pages,
+        features: briefingData.features,
+        budget: briefingData.budget,
+        timeline: briefingData.timeline,
+        description: briefingData.description,
         status: 'draft',
         createdAt: new Date()
       };
@@ -37,37 +46,43 @@ const CreateProposal = () => {
     }
   };
 
-  const handleSaveProposal = () => {
-    if (!proposal) return;
+  const handleSaveProposal = async () => {
+    if (!proposal || !briefingData) return;
 
-    // Save to localStorage
-    const existingProposals = JSON.parse(localStorage.getItem('proposals') || '[]');
-    const updatedProposals = [...existingProposals, proposal];
-    localStorage.setItem('proposals', JSON.stringify(updatedProposals));
+    // Calcular valor baseado no orçamento selecionado
+    const valorMap: { [key: string]: number } = {
+      'R$ 1.000 - R$ 3.000': 2000,
+      'R$ 3.000 - R$ 5.000': 4000,
+      'R$ 5.000 - R$ 10.000': 7500,
+      'R$ 10.000+': 12000
+    };
 
-    toast({
-      title: "Proposta salva!",
-      description: "Sua proposta foi salva no dashboard.",
-    });
+    const proposalData = {
+      titulo: `Proposta para ${briefingData.clientName}`,
+      tipo_site: briefingData.projectType,
+      funcionalidades: briefingData.features,
+      valor_total: valorMap[briefingData.budget] || 5000,
+      status: 'rascunho' as const,
+    };
 
-    navigate('/dashboard');
+    const savedProposal = await createProposal(proposalData);
+    
+    if (savedProposal) {
+      navigate('/dashboard');
+    }
   };
 
   const handleExportPDF = () => {
     toast({
-      title: "Exportando PDF...",
-      description: "Sua proposta será baixada em instantes.",
+      title: "Em desenvolvimento",
+      description: "A funcionalidade de exportar PDF será implementada em breve.",
     });
-    // Here you would implement actual PDF export
   };
 
   const handleShareProposal = () => {
-    const shareUrl = `${window.location.origin}/proposal/${proposal?.id}`;
-    navigator.clipboard.writeText(shareUrl);
-    
     toast({
-      title: "Link copiado!",
-      description: "O link da proposta foi copiado para a área de transferência.",
+      title: "Em desenvolvimento",
+      description: "A funcionalidade de compartilhamento será implementada em breve.",
     });
   };
 
