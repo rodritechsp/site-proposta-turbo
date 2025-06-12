@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -116,7 +115,7 @@ const BriefingForm = ({ onSubmit }: BriefingFormProps) => {
             </h2>
             <div className="space-y-2">
               <Label>Tipo de Site</Label>
-              <Select onValueChange={(value) => setFormData(prev => ({ ...prev, projectType: value }))}>
+              <Select onValueChange={(value) => setFormData(prev => ({ ...prev, projectType: value as any }))}>
                 <SelectTrigger className="transition-all duration-200 focus:ring-2 focus:ring-blue-500">
                   <SelectValue placeholder="Selecione o tipo de site" />
                 </SelectTrigger>

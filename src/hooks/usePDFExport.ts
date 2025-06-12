@@ -139,7 +139,7 @@ export const usePDFExport = () => {
     });
 
     // Rodapé
-    const pageCount = doc.getNumberOfPages();
+    const pageCount = (doc as any).internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       addText(`Página ${i} de ${pageCount}`, pageWidth - 40, doc.internal.pageSize.height - 10, 10);

@@ -21,7 +21,7 @@ export const useProposals = () => {
         .order('criado_em', { ascending: false });
 
       if (error) throw error;
-      setProposals(data || []);
+      setProposals((data || []) as Proposta[]);
     } catch (error) {
       console.error('Erro ao carregar propostas:', error);
       toast({
@@ -49,7 +49,7 @@ export const useProposals = () => {
 
       if (error) throw error;
 
-      setProposals(prev => [data, ...prev]);
+      setProposals(prev => [data as Proposta, ...prev]);
       
       toast({
         title: "Sucesso!",
@@ -79,7 +79,7 @@ export const useProposals = () => {
 
       if (error) throw error;
 
-      setProposals(prev => prev.map(p => p.id === id ? data : p));
+      setProposals(prev => prev.map(p => p.id === id ? data as Proposta : p));
       
       toast({
         title: "Sucesso!",
