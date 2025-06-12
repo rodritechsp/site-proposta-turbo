@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,14 +9,30 @@ import { usePDFExport } from '@/hooks/usePDFExport';
 import { FileText, Plus, Eye, Share2, Download, Calendar, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
-import { ProposalData } from '@/types';
+import { ProposalData, Proposta } from '@/types';
+import ProposalModal from './ProposalModal';
+import ShareModal from './ShareModal';
 
 const Dashboard = () => {
   const { proposals, loading } = useProposals();
   const { signOut, userProfile } = useAuth();
   const { generatePDF } = usePDFExport();
+  
+  const [selectedProposal, setSelectedProposal] = useState<Proposta | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
-  const handleExportPDF = (proposta: any) => {
+  const handleViewProposal = (proposta: Proposta) => {
+    setSelectedProposal(proposta);
+    setIsViewModalOpen(true);
+  };
+
+  const handleShareProposal = (proposta: Proposta) => {
+    setSelectedProposal(proposta);
+    setIsShareModalOpen(true);
+  };
+
+  const handleExportPDF = (proposta: Proposta) => {
     try {
       // Converter dados do Supabase para o formato ProposalData
       const proposalData: ProposalData = {
@@ -231,11 +248,21 @@ const Dashboard = () => {
                   </div>
                   
                   <div className="flex items-center space-x-2 ml-6">
-                    <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center space-x-1"
+                      onClick={() => handleViewProposal(proposta)}
+                    >
                       <Eye size={14} />
                       <span>Ver</span>
                     </Button>
-                    <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center space-x-1"
+                      onClick={() => handleShareProposal(proposta)}
+                    >
                       <Share2 size={14} />
                       <span>Compartilhar</span>
                     </Button>
@@ -255,6 +282,19 @@ const Dashboard = () => {
           </div>
         )}
       </Card>
+
+      {/* Modals */}
+      <ProposalModal
+        proposta={selectedProposal}
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+      />
+      
+      <ShareModal
+        proposta={selectedProposal}
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+      />
     </div>
   );
 };

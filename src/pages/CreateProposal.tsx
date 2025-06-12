@@ -27,12 +27,12 @@ const CreateProposal = () => {
   };
 
   const handleTemplateContinue = () => {
-    if (briefingData) {
+    if (briefingData && briefingData.projectType !== '') {
       const newProposal: ProposalData = {
         id: Date.now().toString(),
         clientName: briefingData.clientName,
         clientEmail: briefingData.clientEmail,
-        projectType: briefingData.projectType,
+        projectType: briefingData.projectType as 'landing' | 'institutional' | 'ecommerce' | 'blog' | 'custom',
         pages: briefingData.pages,
         features: briefingData.features,
         budget: briefingData.budget,
