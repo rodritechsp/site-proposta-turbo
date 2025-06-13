@@ -13,6 +13,11 @@ export interface ProposalData {
   createdAt: Date;
   signedAt?: Date;
   signerName?: string;
+  clientLogo?: string;
+  customColors?: {
+    primary: string;
+    secondary: string;
+  };
 }
 
 export interface BriefingFormData {
@@ -24,6 +29,11 @@ export interface BriefingFormData {
   budget: string;
   timeline: string;
   description: string;
+  clientLogo?: string;
+  customColors?: {
+    primary: string;
+    secondary: string;
+  };
 }
 
 export interface ProposalTemplate {
@@ -51,6 +61,25 @@ export interface Proposta {
   valor_total: number;
   status: string;
   pdf_url?: string;
+  logo_cliente_url?: string;
+  cores_personalizadas?: {
+    primaria: string;
+    secundaria: string;
+  };
   criado_em: string;
   atualizado_em: string;
+}
+
+export interface CompanySettings {
+  id?: string;
+  user_id: string;
+  nome_empresa?: string;
+  logo_url?: string;
+  cor_primaria?: string;
+  cor_secundaria?: string;
+  endereco?: string;
+  telefone?: string;
+  email_empresa?: string;
+  created_at?: string;
+  updated_at?: string;
 }

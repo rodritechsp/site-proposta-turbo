@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useProposals } from '@/hooks/useProposals';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePDFExport } from '@/hooks/usePDFExport';
-import { FileText, Plus, Eye, Share2, Download, Calendar, LogOut } from 'lucide-react';
+import { FileText, Plus, Eye, Share2, Download, Calendar, LogOut, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { ProposalData, Proposta } from '@/types';
@@ -39,13 +38,13 @@ const Dashboard = () => {
         id: proposta.id,
         clientName: proposta.titulo.replace('Proposta para ', ''),
         clientEmail: 'cliente@exemplo.com', // Placeholder
-        projectType: proposta.tipo_site,
+        projectType: proposta.tipo_site as 'landing' | 'institutional' | 'ecommerce' | 'blog' | 'custom',
         pages: 5, // Placeholder
         features: proposta.funcionalidades || [],
         budget: 'R$ 5.000 - R$ 10.000', // Placeholder baseado no valor
         timeline: '30 dias', // Placeholder
         description: `Desenvolvimento de ${getProjectTypeLabel(proposta.tipo_site)} com as funcionalidades solicitadas.`,
-        status: proposta.status,
+        status: proposta.status as 'draft' | 'sent' | 'accepted' | 'rejected',
         createdAt: new Date(proposta.criado_em),
       };
 
@@ -130,6 +129,15 @@ const Dashboard = () => {
           </p>
         </div>
         <div className="flex items-center space-x-4">
+          <Link to="/configuracoes">
+            <Button
+              variant="outline"
+              className="flex items-center space-x-2"
+            >
+              <Settings size={16} />
+              <span>Configurações</span>
+            </Button>
+          </Link>
           <Link to="/create">
             <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 hover:shadow-lg flex items-center space-x-2">
               <Plus size={20} />

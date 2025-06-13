@@ -9,12 +9,56 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      configuracoes_empresa: {
+        Row: {
+          cor_primaria: string | null
+          cor_secundaria: string | null
+          created_at: string
+          email_empresa: string | null
+          endereco: string | null
+          id: string
+          logo_url: string | null
+          nome_empresa: string | null
+          telefone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cor_primaria?: string | null
+          cor_secundaria?: string | null
+          created_at?: string
+          email_empresa?: string | null
+          endereco?: string | null
+          id?: string
+          logo_url?: string | null
+          nome_empresa?: string | null
+          telefone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cor_primaria?: string | null
+          cor_secundaria?: string | null
+          created_at?: string
+          email_empresa?: string | null
+          endereco?: string | null
+          id?: string
+          logo_url?: string | null
+          nome_empresa?: string | null
+          telefone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       propostas: {
         Row: {
           atualizado_em: string | null
+          cores_personalizadas: Json | null
           criado_em: string | null
           funcionalidades: Json | null
           id: string
+          logo_cliente_url: string | null
           pdf_url: string | null
           status: string | null
           tipo_site: string
@@ -24,9 +68,11 @@ export type Database = {
         }
         Insert: {
           atualizado_em?: string | null
+          cores_personalizadas?: Json | null
           criado_em?: string | null
           funcionalidades?: Json | null
           id?: string
+          logo_cliente_url?: string | null
           pdf_url?: string | null
           status?: string | null
           tipo_site: string
@@ -36,9 +82,11 @@ export type Database = {
         }
         Update: {
           atualizado_em?: string | null
+          cores_personalizadas?: Json | null
           criado_em?: string | null
           funcionalidades?: Json | null
           id?: string
+          logo_cliente_url?: string | null
           pdf_url?: string | null
           status?: string | null
           tipo_site?: string
