@@ -10,6 +10,8 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./components/Dashboard";
 import CreateProposal from "./pages/CreateProposal";
+import EditProposal from "./pages/EditProposal";
+import ViewProposal from "./pages/ViewProposal";
 import ProposalView from "./pages/ProposalView";
 import CompanySettings from "./pages/CompanySettings";
 import NotFound from "./pages/NotFound";
@@ -39,6 +41,22 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <CreateProposal />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/edit/:id" 
+              element={
+                <ProtectedRoute>
+                  <EditProposal />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/view/:id" 
+              element={
+                <ProtectedRoute>
+                  <ViewProposal />
                 </ProtectedRoute>
               } 
             />

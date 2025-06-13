@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useProposals } from '@/hooks/useProposals';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePDFExport } from '@/hooks/usePDFExport';
-import { FileText, Plus, Eye, Share2, Download, Calendar, LogOut, Settings } from 'lucide-react';
+import { FileText, Plus, Eye, Share2, Download, Calendar, LogOut, Settings, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { ProposalData, Proposta } from '@/types';
@@ -256,15 +256,26 @@ const Dashboard = () => {
                   </div>
                   
                   <div className="flex items-center space-x-2 ml-6">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="flex items-center space-x-1"
-                      onClick={() => handleViewProposal(proposta)}
-                    >
-                      <Eye size={14} />
-                      <span>Ver</span>
-                    </Button>
+                    <Link to={`/edit/${proposta.id}`}>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex items-center space-x-1"
+                      >
+                        <Edit size={14} />
+                        <span>Editar</span>
+                      </Button>
+                    </Link>
+                    <Link to={`/view/${proposta.id}`}>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex items-center space-x-1"
+                      >
+                        <Eye size={14} />
+                        <span>Visualizar</span>
+                      </Button>
+                    </Link>
                     <Button 
                       variant="outline" 
                       size="sm" 
